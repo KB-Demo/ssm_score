@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.ScoreMapper">
+
+    <!--查询所有成绩-->
+    <select id="queryAllCourse" resultType="Course">
+        select * from ssmscore.course;
+    </select>
+
+    <!--通过学生id查成绩-->
+    <select id="queryCourseBySid" resultType="Course">
+        select * from ssmscore.course where s_id=#{s_id};
+    </select>
+
+    <!--通过课程查成绩-->
+    <select id="queryCourseByCid" resultType="Course">
+        select * from ssmscore.course where c_id=#{c_id};
+    </select>
+
+    <!--查询所有成绩对应学生信息-->
+    <!-- 方式一：
+    <select id="queryAllScoreAndStu" resultMap="StudentScore">
+        select * from ssmscore.score;
+    </select>
+    <resultMap id="StudentScore" type="Score">
+        <result property="s_id" column="s_id"/>
+        <result property="s_score" column="s_score"/>
+        &lt;!&ndash;复杂属性，对象：association 集合：collection&ndash;&gt;
+        <association property="stu" column="s_id" javaType="com.sun.pojo.Stu" select="stu"/>
+    </resultMap>
+    <select id="stu" resultType="Stu">
+        select * from ssmscore.stu where s_id=#{s_id};
+    </select>
+    -->
+    <select id="queryAllScoreAndStu" resultMap="StudentScore">
+        select sc.s_id sid,s.s_name,sc.c_id cid,sc.s_score score from stu s,score sc where s.s_id=sc.s_id;
+    </select>
+    <resultMap id="StudentScore" type="Score">
+        <result property="s_id" column="sid"/>
+        <result property="s_score" column="score"/>
+        <result property="c_id" column="cid"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_name" column="s_name"/>
+        </association>
+    </resultMap>
+
+
+
+
+
+
+
+
+
+
+</mapper>

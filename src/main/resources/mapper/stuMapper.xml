@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.StuMapper">
+    <!--添加一名学生-->
+    <insert id="addStu" parameterType="Stu">
+        insert into ssmscore.stu(s_name,s_birth,s_sex) values (#{s_name},#{s_birth},#{s_sex});
+    </insert>
+
+    <!--删除一名学生-->
+    <delete id="deleteStu" parameterType="int">
+        delete from ssmscore.stu where s_id = #{s_id};
+    </delete>
+
+    <!--修改学生信息-->
+    <update id="updateStu" parameterType="Stu">
+        update ssmscore.stu set s_name=#{s_name},s_birth=#{s_birth},s_sex=#{s_sex},s_tel=#{s_tel},s_email=#{s_email}
+        where s_id=#{s_id};
+    </update>
+
+    <!--通过id查询一名学生-->
+    <select id="queryStuById" resultType="Stu">
+        select * from ssmscore.stu where s_id=#{s_id};
+    </select>
+
+    <!--查询所有学生-->
+    <select id="queryAllStu" resultType="Stu">
+        select * from ssmscore.stu;
+    </select>
+
+    <!--学生登录校验-->
+    <select id="stuLoginCheck" resultType="String">
+        select s_psw from ssmscore.stu where s_username=#{username};
+    </select>
+
+    <!--通过用户名查询学生个人信息-->
+    <select id="queryStuByUserName" resultType="Stu">
+        select * from ssmscore.stu where s_username=#{username};
+    </select>
+
+    <!--通过用户名查询学生课程信息和成绩-->
+    <select id="queryStuScoreCourse" resultMap="StudentScoreCourse">
+        SELECT c.c_name cname,sc.s_score score,t.`t_name` tname
+        FROM score sc,course c,stu s,teacher t
+        WHERE sc.`s_id`=s.`s_id`AND c.`c_id`=sc.`c_id`AND t.`t_id`=c.`t_id`AND s.`s_username`=#{username}
+        AND c.c_name like concat('%',#{cname},'%');
+    </select>
+    <resultMap id="StudentScoreCourse" type="Stu">
+        <association property="course" javaType="Course">
+            <result property="c_name" column="cname"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="score"/>
+        </association>
+        <association property="teacher" javaType="Teacher">
+            <result property="t_name" column="tname"/>
+        </association>
+    </resultMap>
+
+    <!--查询Score中的总记录数-->
+    <select id="queryCountStu" resultType="int">
+        select count(s_id) from ssmscore.stu;
+    </select>
+
+    <!--查询总成绩排行-->
+    <select id="queryScoreRank" resultMap="stuRank" parameterType="map">
+       SELECT a.`s_id` sid,a.`s_name` sname,IFNULL(b.total,0) sum,rank() over(ORDER BY b.total DESC) r
+       FROM stu a LEFT JOIN (SELECT s.`s_id`,AVG(s.`s_score`) total FROM score s GROUP BY s_id) b
+       ON a.`s_id`=b.s_id limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="stuRank" type="Stu">
+        <result property="s_id" column="sid"/>
+        <result property="s_name" column="sname"/>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="sum"/>
+            <result property="rank" column="r"/>
+        </association>
+    </resultMap>
+
+    <!--查询Score中的总记录数，通过科目分类-->
+    <select id="queryCountStuByCourse" resultType="int" >
+        SELECT COUNT(a.s_id) FROM score a,course b WHERE a.`c_id`=b.`c_id` AND b.`c_name`LIKE concat('%',#{cname},'%');
+    </select>
+
+   <!--通过科目查询平均成绩排行-->
+    <select id="queryScoreRankByCourse" parameterType="map" resultMap="stuRankByCourse" >
+        SELECT a.`s_id` sid,a.`s_name` sname,b.cname cname,IFNULL(b.score,0) avg,rank() over(PARTITION BY b.cname ORDER BY b.score DESC) r
+        FROM stu a JOIN (SELECT sc.`s_id` sid,sc.`s_score` score,c.`c_name` cname FROM score sc,course c WHERE sc.`c_id`=c.`c_id`) b
+        ON a.`s_id`=b.sid AND b.cname LIKE concat('%',#{cname},'%') limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="stuRankByCourse" type="Stu">
+        <result property="s_id" column="sid"/>
+        <result property="s_name" column="sname"/>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="cname"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="avg"/>
+            <result property="rank" column="r"/>
+        </association>
+    </resultMap>
+
+    <!--修改密码-->
+    <update id="updateStuPsw" parameterType="String">
+        update ssmscore.stu set s_psw=#{psw} where s_username=#{username};
+    </update>
+
+    <!--学生注册-->
+    <update id="stuRegistered">
+        update ssmscore.stu set s_username=#{username},s_psw=#{psw} where s_id=#{s_id};
+    </update>
+
+
+</mapper>

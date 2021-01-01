@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.TeacherMapper">
+
+    <!--教师登录校验-->
+    <select id="teacherLoginCheck" resultType="String">
+        select t_psw from ssmscore.teacher where t_username=#{userName};
+    </select>
+
+    <!--通过ID查找教师-->
+    <select id="queryTeacherById" resultType="Teacher">
+        select * from ssmscore.teacher where t_id=#{t_id};
+    </select>
+
+    <!--教师用户注册-->
+    <update id="teacherRegistered">
+        update ssmscore.teacher set t_username=#{username},t_psw=#{psw} where t_id=#{t_id};
+    </update>
+</mapper>
