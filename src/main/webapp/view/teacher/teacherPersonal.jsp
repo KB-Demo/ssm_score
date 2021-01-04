@@ -21,18 +21,24 @@
             <div class="ftdms-layout-sidebar-scroll">
                 <nav class="sidebar-main">
                     <ul class="nav nav-drawer">
-                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/stu/stuScore"><i class="ftsucai-82"></i>个人成绩</a> </li>
-                        <li class="nav-item nav-item-has-subnav active open">
+                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/teacher/index"><i class="ftsucai-82"></i>个人课程</a> </li>
+                        <li class="nav-item  nav-item-has-subnav active open">
                             <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>个人信息编辑</a>
                             <ul class="nav nav-subnav">
-                                <li class="active"> <a href="${pageContext.request.contextPath}/stu/stuPersonal">个人信息</a> </li>
-                                <li> <a href="${pageContext.request.contextPath}/stu/toUpdateStu">修改</a> </li>
+                                <li class="active"> <a href="${pageContext.request.contextPath}/teacher/personal">个人信息</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/toUpdate">修改</a> </li>
                             </ul>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>班级成绩排行</a>
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>学生列表</a>
                             <ul class="nav nav-subnav">
-                                <li> <a href="${pageContext.request.contextPath}/stu/stuSumRank?currentPage=1&rows=5">总成绩排行</a> </li>
-                                <li> <a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=1&rows=5">科目成绩排行</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myCourseStu">课程学生</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myClassStu">班级学生</a> </li>
+                            </ul>
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>成绩管理</a>
+                            <ul class="nav nav-subnav">
+                                <li> <a href="${pageContext.request.contextPath}/teacher/courseStuScore">课程学生成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuScore">班级学生成绩</a> </li>
                             </ul>
                     </ul>
                 </nav>
@@ -58,12 +64,12 @@
                     <ul class="topbar-right">
                         <li class="dropdown dropdown-profile">
                             <a href="javascript:void(0)" data-toggle="dropdown">
-                                <span>${login_msg}，你好！<span class="caret"></span></span>
+                                <span>${name_msg}教师，你好！<span class="caret"></span></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li> <a href="${pageContext.request.contextPath}/stu/toChangePsw"><i class="ftsucai-edit-2"></i> 修改密码</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/toChangePsw"><i class="ftsucai-edit-2"></i> 修改密码</a> </li>
                                 <li class="divider"></li>
-                                <li><a href="${pageContext.request.contextPath}/stu/exit"><i class="ftsucai-exit2"></i> 退出登录</a> </li>
+                                <li><a href="${pageContext.request.contextPath}/teacher/exit"><i class="ftsucai-exit2"></i> 退出登录</a> </li>
                             </ul>
                         </li>
                     </ul>
@@ -82,38 +88,38 @@
                     <div class="col-lg-12">
                         <div class="card">
 
-                            <%--显示个人成绩--%>
+                            <%--显示个人信息--%>
                             <div class="card-body">
 
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <tr>
-                                            <th>学号</th>
-                                            <th>${stu.s_id}</th>
+                                            <th>教工号</th>
+                                            <th>${teacher.t_id}</th>
                                         </tr>
                                         <tr>
                                             <th>姓名</th>
-                                            <th>${stu.s_name}</th>
+                                            <th>${teacher.t_name}</th>
                                         </tr>
                                         <tr>
-                                            <th>生日</th>
-                                            <th>${stu.s_birth}</th>
+                                            <th>出生日期</th>
+                                            <th>${teacher.t_birth}</th>
                                         </tr>
                                         <tr>
                                             <th>性别</th>
-                                            <th>${stu.s_sex}</th>
+                                            <th>${teacher.t_sex}</th>
+                                        </tr>
+                                        <tr>
+                                            <th>带领班级</th>
+                                            <th>${teacher.t_class.class_name}</th>
                                         </tr>
                                         <tr>
                                             <th>电话</th>
-                                            <th>${stu.s_tel}</th>
+                                            <th>${teacher.t_tel}</th>
                                         </tr>
                                         <tr>
                                             <th>邮箱</th>
-                                            <th>${stu.s_email}</th>
-                                        </tr>
-                                        <tr>
-                                            <th>班级</th>
-                                            <th>${stu.s_class.class_name}</th>
+                                            <th>${teacher.t_email}</th>
                                         </tr>
                                     </table>
                                 </div>

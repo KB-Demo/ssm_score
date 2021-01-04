@@ -57,23 +57,23 @@ public class StuServiceImpl implements StuService {
     }
 
     @Override
-    public PageBean<Stu> findCourseRankByPage(String _currentPage, String _rows, String c_name) {
+    public PageBean<Stu> findCourseRankByPage(String _currentPage, String _rows, String c_name, Stu stu) {
         //1.创建空的PageBean对象
         PageBean<Stu> pb = new PageBean<>();
         //2.设置参数 currentPage当前页 rows每页数据量
         int currentPage = Integer.parseInt(_currentPage);
         int rows = Integer.parseInt(_rows);
         //3.调用dao查询记录数by科目成绩 totalCount总记录数
-        int totalCount = stuMapper.queryCountStuByCourse(c_name);
+        int totalCount = stuMapper.queryCountStuByCourse(c_name,stu.getS_class().getClass_id());
         //4.计算总页码 totalPage
         int totalPage = totalCount % rows == 0 ? totalCount / rows : totalCount / rows + 1;
         //4.1防止越界
-        if (totalPage==0){
+        if (totalPage == 0) {
             totalPage = 1;//没查出的时候totalPage==0，会让currentPage越界}
             pb.setError("未查到该课程");
         }
         if (currentPage <= 0) currentPage = 1;
-        if (currentPage>totalPage) currentPage = totalPage;
+        if (currentPage > totalPage) currentPage = totalPage;
         //System.out.println("currentPage:"+currentPage+"--totalPage:"+totalPage);
         //4.2计算开始索引 = (当前页-1)*每页数据
         int startIndex = (currentPage - 1) * rows;
@@ -82,6 +82,9 @@ public class StuServiceImpl implements StuService {
         map.put("startIndex", startIndex);
         map.put("rows", rows);
         map.put("cname", c_name);
+        map.put("class_id", stu.getS_class().getClass_id());
+        System.out.println("rows="+rows+",startIndex="+startIndex+",cname="+c_name+",class_id="+ stu.getS_class().getClass_id()+",totalPage"+totalPage+":"+totalCount);
+        System.out.println(stu.getS_class().getClass_id());
         List<Stu> stus = stuMapper.queryScoreRankByCourse(map);
         //6.封装数据到pb对象
         pb.setTotalPage(totalPage);
@@ -94,7 +97,7 @@ public class StuServiceImpl implements StuService {
 
 
     @Override
-    public PageBean<Stu> findRankByPage(String _currentPage, String _rows) {
+    public PageBean<Stu> findRankByPage(String _currentPage, String _rows,Stu stu) {
         //1.创建空的PageBean对象
         PageBean<Stu> pb = new PageBean<>();
         //2.设置参数
@@ -102,7 +105,7 @@ public class StuServiceImpl implements StuService {
         int rows = Integer.parseInt(_rows);
 
         //3.调用dao查询总记录数
-        int totalCount = stuMapper.queryCountStu();
+        int totalCount = stuMapper.queryCountStu(stu.getS_class().getClass_id());
         //4.计算总页码
         int totalPage = totalCount % rows == 0 ? totalCount / rows : totalCount / rows + 1;
         //4.1防止越界
@@ -117,6 +120,8 @@ public class StuServiceImpl implements StuService {
 
         //5.调用dao查询List集合
         Map<String,Integer> map = new HashMap<>();
+        map.put("class_id", stu.getS_class().getClass_id());
+        System.out.println(stu.getS_class().getClass_id());
         map.put("startIndex", startIndex);
         map.put("rows", rows);
         List<Stu> stus = stuMapper.queryScoreRank(map);

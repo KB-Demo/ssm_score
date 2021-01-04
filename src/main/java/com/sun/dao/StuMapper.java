@@ -33,17 +33,17 @@ public interface StuMapper {
     //通过用户名查询学生课程信息和成绩
     List<Stu> queryStuScoreCourse(@Param("username") String userName, @Param("cname") String c_name);
 
-    //查询平均成绩排行
+    //查询总平均分排行
     List<Stu> queryScoreRank(Map<String,Integer> map);
 
-    //通过科目查询平均成绩排行
+    //通过科目查询成绩排行
     List<Stu> queryScoreRankByCourse(Map map);
 
-    //查询Score中的总记录数
-    int queryCountStu();
+    //查询Score中的总记录数，通过班级
+    int queryCountStu(@Param("class_id")int class_id);
 
-    //查询Score中的总记录数，通过科目分类
-    int queryCountStuByCourse(@Param("cname") String c_name);
+    //查询Score中的总记录数，通过科目和班级
+    int queryCountStuByCourse(@Param("cname") String c_name, @Param("class_id") int class_id);
 
     //修改密码
     int updateStuPsw(@Param("username") String userName,@Param("psw")String psw);

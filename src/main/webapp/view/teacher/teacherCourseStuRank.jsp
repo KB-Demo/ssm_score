@@ -21,20 +21,25 @@
             <div class="ftdms-layout-sidebar-scroll">
                 <nav class="sidebar-main">
                     <ul class="nav nav-drawer">
-                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/stu/stuScore"><i class="ftsucai-82"></i>个人成绩</a> </li>
-                        <li class="nav-item nav-item-has-subnav">
+                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/teacher/index"><i class="ftsucai-82"></i>个人课程</a> </li>
+                        <li class="nav-item  nav-item-has-subnav">
                             <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>个人信息编辑</a>
                             <ul class="nav nav-subnav">
-                                <li> <a href="${pageContext.request.contextPath}/stu/stuPersonal">个人信息</a> </li>
-                                <li> <a href="${pageContext.request.contextPath}/stu/toUpdateStu">修改</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/personal">个人信息</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/toUpdate">修改</a> </li>
                             </ul>
-                        <li class="nav-item nav-item-has-subnav active open">
-                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>班级成绩排行</a>
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>学生列表</a>
                             <ul class="nav nav-subnav">
-                                <li> <a href="${pageContext.request.contextPath}/stu/stuSumRank?currentPage=1&rows=5">总成绩排行</a> </li>
-                                <li class="active"> <a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=1&rows=5">科目成绩排行</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myCourseStu">课程学生</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myClassStu">班级学生</a> </li>
                             </ul>
-
+                        <li class="nav-item nav-item-has-subnav active open ">
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>成绩管理</a>
+                            <ul class="nav nav-subnav">
+                                <li class="active"> <a href="${pageContext.request.contextPath}/teacher/courseStuScore">课程学生成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuScore">班级学生成绩</a> </li>
+                            </ul>
                     </ul>
                 </nav>
             </div>
@@ -53,18 +58,18 @@
                             <span class="ftdms-toggler-bar"></span>
                             <span class="ftdms-toggler-bar"></span>
                         </div>
-                        <span class="navbar-page-title"> 班级成绩排行-科目成绩排行 </span>
+                        <span class="navbar-page-title"> 学生列表-课程学生 </span>
                     </div>
 
                     <ul class="topbar-right">
                         <li class="dropdown dropdown-profile">
                             <a href="javascript:void(0)" data-toggle="dropdown">
-                                <span>${login_msg}，你好！<span class="caret"></span></span>
+                                <span>${name_msg}教师，你好！<span class="caret"></span></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li> <a href="${pageContext.request.contextPath}/stu/toChangePsw"><i class="ftsucai-edit-2"></i> 修改密码</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/toChangePsw"><i class="ftsucai-edit-2"></i> 修改密码</a> </li>
                                 <li class="divider"></li>
-                                <li><a href="${pageContext.request.contextPath}/stu/exit"><i class="ftsucai-exit2"></i> 退出登录</a> </li>
+                                <li><a href="${pageContext.request.contextPath}/teacher/exit"><i class="ftsucai-exit2"></i> 退出登录</a> </li>
                             </ul>
                         </li>
                     </ul>
@@ -82,16 +87,25 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-
+                            <%--class="pull-right search-bar"--%>
                             <div class="card-toolbar clearfix">
                                 <%--按课程名称查询--%>
-                                <form class="pull-right search-bar" method="post" action="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=1&rows=5&" role="form">
-                                    <span style="color: red;font-weight:bold">${error}</span>
-                                    <div class="input-group">
-                                        <input type="text" name="cname" class="form-control" placeholder="请输入课程名称">
-                                        <span class="input-group-btn">
-                                            <input type="submit" value="查询" class="btn btn-success">
-                                        </span>
+                                <form class="form-inline pull-right" action="${pageContext.request.contextPath}/teacher/courseStuScore" method="post" >
+                                    <span style="color: red;font-weight:bold">${pb.error}</span>
+                                    <div class="form-group">
+                                        <%--<label class="sr-only" for="example-if-email">邮箱</label>--%>
+                                        <input class="form-control" type="text" name="sid" placeholder="请输入学号..">
+                                    </div>
+                                    <div class="form-group">
+                                        <%--<label class="sr-only" for="example-if-password">密码</label>--%>
+                                        <input class="form-control" type="text"  name="sname" placeholder="请输入姓名..">
+                                    </div>
+                                    <div class="form-group">
+                                        <%--<label class="sr-only" for="example-if-password">密码</label>--%>
+                                        <input class="form-control" type="text"  name="cname" placeholder="请输入课程名称..">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" type="submit">查询</button>
                                     </div>
                                 </form>
                             </div>
@@ -105,22 +119,22 @@
                                         <tr>
                                             <th>学号</th>
                                             <th>姓名</th>
-                                            <th>班级</th>
-                                            <th>科目</th>
+                                            <th>课程</th>
                                             <th>分数</th>
                                             <th>排名</th>
+                                            <th>班级</th>
                                         </tr>
                                         </thead>
 
                                         <tbody>
-                                        <c:forEach var="stu" items="${requestScope.get('stus')}" >
+                                        <c:forEach var="teacher" items="${requestScope.get('teachers')}" >
                                             <tr>
-                                                <td>${stu.s_id}</td>
-                                                <td>${stu.s_name}</td>
-                                                <td>${stu.s_class.class_name}</td>
-                                                <td>${stu.course.c_name}</td>
-                                                <td>${stu.score.s_score}</td>
-                                                <td>${stu.score.rank}</td>
+                                                <td>${teacher.stu.s_id}</td>
+                                                <td>${teacher.stu.s_name}</td>
+                                                <td>${teacher.course.c_name}</td>
+                                                <td>${teacher.score.s_score}</td>
+                                                <td>${teacher.score.rank}</td>
+                                                <td>${teacher.t_class.class_name}</td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>
@@ -137,17 +151,17 @@
                                     <c:if test="${pb.currentPage!=1}">
                                 <li>
                                     </c:if>
-                                    <a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=${pb.currentPage-1}&rows=5&cname=${cname}" aria-label="Previous">
+                                    <a href="${pageContext.request.contextPath}/teacher/courseStuScore?currentPage=${pb.currentPage-1}&rows=10&sname=${sname}&sid=${sid}&cname=${cname}" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                                 <%--totalPage=总页码 currentPage=当前页码 startIndex=开始页码--%>
                                 <c:forEach begin="1" end="${pb.totalPage}" var="i">
                                     <c:if test="${pb.currentPage == i}">
-                                        <li class="active"><a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=${i}&rows=5&cname=${cname}"> ${i}</a></li>
+                                        <li class="active"><a href="${pageContext.request.contextPath}/teacher/courseStuScore?currentPage=${i}&rows=10&sname=${sname}&sid=${sid}&cname=${cname}"> ${i}</a></li>
                                     </c:if>
                                     <c:if test="${pb.currentPage != i}">
-                                        <li><a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=${i}&rows=5&cname=${cname}"> ${i}</a></li></li>
+                                        <li><a href="${pageContext.request.contextPath}/teacher/courseStuScore?currentPage=${i}&rows=10&sname=${sname}&sid=${sid}&cname=${cname}"> ${i}</a></li></li>
                                     </c:if>
                                 </c:forEach>
                                 <%----%>
@@ -157,7 +171,7 @@
                                     <c:if test="${pb.currentPage!=pb.totalPage}">
                                 <li>
                                     </c:if>
-                                    <a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=${pb.currentPage+1}&rows=5&cname=${cname}" aria-label="Next">
+                                    <a href="${pageContext.request.contextPath}/teacher/courseStuScore?currentPage=${pb.currentPage+1}&rows=10&sname=${sname}&sid=${sid}&cname=${cname}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

@@ -21,18 +21,24 @@
             <div class="ftdms-layout-sidebar-scroll">
                 <nav class="sidebar-main">
                     <ul class="nav nav-drawer">
-                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/stu/stuScore"><i class="ftsucai-82"></i>个人成绩</a> </li>
-                        <li class="nav-item nav-item-has-subnav active open">
+                        <li class="nav-item active"> <a href="${pageContext.request.contextPath}/teacher/index"><i class="ftsucai-82"></i>个人课程</a> </li>
+                        <li class="nav-item  nav-item-has-subnav active open">
                             <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>个人信息编辑</a>
                             <ul class="nav nav-subnav">
-                                <li> <a href="${pageContext.request.contextPath}/stu/stuPersonal">个人信息</a> </li>
-                                <li class="active"> <a href="${pageContext.request.contextPath}/stu/toUpdateStu">修改</a> </li>
+                                <li class="active"> <a href="${pageContext.request.contextPath}/teacher/personal">个人信息</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/toUpdate">修改</a> </li>
                             </ul>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>班级成绩排行</a>
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>学生列表</a>
                             <ul class="nav nav-subnav">
-                                <li> <a href="${pageContext.request.contextPath}/stu/stuSumRank?currentPage=1&rows=5">总成绩排行</a> </li>
-                                <li> <a href="${pageContext.request.contextPath}/stu/queryRankByCname?currentPage=1&rows=5">科目成绩排行</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myCourseStu">课程学生</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/myClassStu">班级学生</a> </li>
+                            </ul>
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="ftsucai-edit-2"></i>成绩管理</a>
+                            <ul class="nav nav-subnav">
+                                <li> <a href="${pageContext.request.contextPath}/teacher/courseStuScore">课程学生成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuScore">班级学生成绩</a> </li>
                             </ul>
                     </ul>
                 </nav>
@@ -85,7 +91,7 @@
                             <div class="card-body">
 
                                 <div class="table-responsive">
-                                   <%-- <form action="${pageContext.request.contextPath}/stu/updateStu" method="post">--%>
+
                                         <%--
                                          出现的问题：提交sql请求，修改失败，初次考虑，是事务问题，使用aop横切配置事务后依然失败
                                          修改id需要使用隐藏域hidden把id提交
@@ -95,47 +101,47 @@
                                                     <div class="card-header"><h4>修改个人信息</h4></div>
                                                     <div class="card-body">
 
-                                                        <form action="${pageContext.request.contextPath}/stu/updateStu" method="post">
+                                                        <form action="${pageContext.request.contextPath}/teacher/updateTeacher" method="post">
                                                             <%-- 隐藏域ID--%>
-                                                            <input type="hidden" name="s_id" value="${stu.s_id}">
+                                                            <input type="hidden" name="t_id" value="${teacher.t_id}">
                                                             <div class="form-group">
                                                                 <label for="example-nf-name">姓名</label>
-                                                                <input class="form-control" name="s_name" type="text" id="example-nf-name" value="${stu.s_name}">
+                                                                <input class="form-control" name="t_name" type="text" id="example-nf-name" value="${teacher.t_name}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="example-nf-birth">出生日期</label>
-                                                                <input class="form-control" name="s_birth" type="date" id="example-nf-birth" value="${stu.s_birth}">
+                                                                <input class="form-control" name="t_birth" type="date" id="example-nf-birth" value="${teacher.t_birth}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>性别</label>
-                                                                <c:if test="${stu.s_sex == '男'}">
+                                                                <c:if test="${teacher.t_sex == '男'}">
                                                                     <div class="example-box">
                                                                         <label class="ftdms-radio radio-inline radio-primary">
-                                                                            <input type="radio" name="s_sex" value="男" checked="checked"><span>男</span>
+                                                                            <input type="radio" name="t_sex" value="男" checked="checked"><span>男</span>
                                                                         </label>
                                                                         <label class="ftdms-radio radio-inline radio-primary">
-                                                                            <input type="radio" name="s_sex" value="女"><span>女</span>
+                                                                            <input type="radio" name="t_sex" value="女"><span>女</span>
                                                                         </label>
                                                                     </div>
                                                                 </c:if>
-                                                                <c:if test="${stu.s_sex == '女'}">
+                                                                <c:if test="${teacher.t_sex == '女'}">
                                                                     <div class="example-box">
                                                                         <label class="ftdms-radio radio-inline radio-primary">
-                                                                            <input type="radio" name="s_sex" value="男" ><span>男</span>
+                                                                            <input type="radio" name="t_sex" value="男" ><span>男</span>
                                                                         </label>
                                                                         <label class="ftdms-radio radio-inline radio-primary">
-                                                                            <input type="radio" name="s_sex" value="女" checked="checked"><span>女</span>
+                                                                            <input type="radio" name="t_sex" value="女" checked="checked"><span>女</span>
                                                                         </label>
                                                                     </div>
                                                                 </c:if>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="example-nf-tel">电话</label>
-                                                                <input class="form-control" name="s_tel" type="text" id="example-nf-tel" value="${stu.s_tel}">
+                                                                <input class="form-control" name="t_tel" type="text" id="example-nf-tel" value="${teacher.t_tel}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="example-nf-email">邮箱</label>
-                                                                <input class="form-control" name="s_email" type="email" id="example-nf-email" value="${stu.s_email}">
+                                                                <input class="form-control" name="t_email" type="email" id="example-nf-email" value="${teacher.t_email}">
                                                             </div>
                                                             <div class="example-box" style="text-align: center">
                                                                 <input class="btn btn-success btn-w-md" type="submit" value="提交" />
@@ -146,7 +152,7 @@
 
                                                     </div>
                                                 </div>
-                                   <%-- </form>--%>
+
                                 </div>
                             </div>
 

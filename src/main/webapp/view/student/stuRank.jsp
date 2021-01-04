@@ -90,11 +90,12 @@
                                     <table class="table table-bordered">
                                         <thead>
                                         <tr>
-                                            <th>学号</th>
-                                            <th>姓名</th>
-                                            <th>平均分</th>
-                                            <th>排名</th>
-                                        </tr>
+                                        <th>学号</th>
+                                        <th>姓名</th>
+                                        <th>班级</th>
+                                        <th>平均分</th>
+                                        <th>排名</th>
+                                    </tr>
                                         </thead>
 
                                         <tbody>
@@ -102,6 +103,7 @@
                                             <tr>
                                                 <td>${stu.s_id}</td>
                                                 <td>${stu.s_name}</td>
+                                                <td>${stu.s_class.class_name}</td>
                                                 <td>${stu.score.s_score}</td>
                                                 <td>${stu.score.rank}</td>
                                             </tr>

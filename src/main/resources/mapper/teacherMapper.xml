@@ -18,4 +18,132 @@
     <update id="teacherRegistered">
         update ssmscore.teacher set t_username=#{username},t_psw=#{psw} where t_id=#{t_id};
     </update>
+
+    <!--查询教师课程信息-->
+    <select id="queryCourse" resultMap="teacherCourse">
+        SELECT c_id cid,c_name cname,t_name tname FROM teacher a,course b WHERE a.`t_id`=b.`t_id` AND a.`t_username`=#{username};;
+    </select>
+    <resultMap id="teacherCourse" type="Teacher">
+        <result property="t_name" column="tname"/>
+        <association property="course" javaType="Course">
+            <result property="c_id" column="cid"/>
+            <result property="c_name" column="cname"/>
+        </association>
+    </resultMap>
+
+    <!--查询教师个人信息-->
+    <select id="queryTeacherPersonal" resultMap="personal">
+        SELECT a.t_id,a.`t_name`,a.t_birth,a.`t_sex`,b.`class_name`,a.`t_tel`,a.`t_email`
+        FROM teacher a,class b WHERE a.`t_id`=b.`t_id` AND a.`t_username`=#{username};
+    </select>
+    <resultMap id="personal" type="Teacher">
+        <result property="t_id" column="t_id"/>
+        <result property="t_name" column="t_name"/>
+        <result property="t_birth" column="t_birth"/>
+        <result property="t_sex" column="t_sex"/>
+        <result property="t_tel" column="t_tel"/>
+        <result property="t_email" column="t_email"/>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+
+    <!--修改教师个人信息-->
+    <update id="updateTeacher" parameterType="Teacher">
+        update teacher set t_name=#{t_name},t_birth=#{t_birth},t_sex=#{t_sex},t_tel=#{t_tel},t_email=t_email where t_id=#{t_id};
+    </update>
+
+    <!--查询老师课程的学生-->
+    <select id="queryTeacherCourseStu" resultMap="teacherStuCourse">
+        SELECT s.`s_id`,s.`s_name`,s.`s_birth`,s.`s_sex`,s.`s_tel`,s.`s_email`,c.`c_name`,cl.`class_name`,row_number() over(ORDER BY s.s_id DESC) as identity
+        FROM stu s,teacher t,course c,score sc,class cl
+        WHERE s.s_id=sc.`s_id` AND sc.`c_id`=c.`c_id`AND c.`t_id`=t.`t_id`AND cl.class_id=s.class_id
+        AND t.`t_username`=#{username} AND s.`s_name`LIKE concat('%',#{sname},'%')
+        <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="teacherStuCourse" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="s_birth" column="s_birth"/>
+            <result property="s_sex" column="s_sex"/>
+            <result property="s_tel" column="s_tel"/>
+            <result property="s_email" column="s_email"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+        </association>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查询老师课程学生的总记录数-->
+    <select id="queryCourseStuCount" parameterType="map" resultType="int" >
+        SELECT COUNT(sc.`s_id`)
+        FROM score sc,teacher t,course c,stu s
+        WHERE s.`s_id`=sc.`s_id` AND sc.`c_id`=c.`c_id` AND c.`t_id`=t.`t_id`
+        AND t.`t_username`=#{username}
+        AND c.c_name LIKE concat('%',#{cname},'%') AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if>;
+    </select>
+
+
+    <!--查询老师带领班级的学生信息-->
+    <select id="queryTeacherClassStu" resultMap="teacherStuClass">
+        SELECT  s.`s_id`,s.`s_name`,s.`s_birth`,s.`s_sex`,s.`s_tel`,s.`s_email`,cl.`class_name`,row_number() over(ORDER BY s.s_id DESC) as identity
+        FROM 	teacher t,class cl,stu s
+        WHERE  	t.`t_id`=cl.`t_id` AND cl.`class_id`=s.`class_id`
+        AND t.`t_username`=#{username} AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="teacherStuClass" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="s_birth" column="s_birth"/>
+            <result property="s_sex" column="s_sex"/>
+            <result property="s_tel" column="s_tel"/>
+            <result property="s_email" column="s_email"/>
+        </association>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查询老师带领班级学生的总记录数-->
+    <select id="queryClassStuCount" parameterType="map" resultType="int">
+        SELECT COUNT(s.`s_id`)
+        FROM teacher t,class cl,stu s
+        WHERE t.`t_id`=cl.`t_id` AND cl.`class_id`=s.`class_id` AND t.`t_username`=#{username}
+        AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if>;
+    </select>
+
+    <!--查询老师带领班级的学生成绩排行-->
+    <select id="queryTeacherCourseStuRank" resultMap="courseRank">
+        SELECT s.`s_id`,s.`s_name`,cl.class_name,b.c_name,b.s_score,rank() over(PARTITION BY b.c_name ORDER BY b.s_score DESC) k,b.r identity
+        FROM stu s,class cl,(SELECT  c.`c_id`,c.`c_name`,t.`t_username`,sc.`s_id`,sc.`s_score`,row_number() over(ORDER BY sc.s_score DESC) r
+                FROM course c,score sc,teacher t WHERE c.`c_id`=sc.`c_id` AND c.`t_id`=t.`t_id` )b
+        WHERE s.s_id=b.s_id AND cl.`class_id`=s.`class_id`
+            AND b.`t_username`=#{username} AND s.`s_name`LIKE concat('%',#{sname},'%')
+            AND b.c_name LIKE concat('%',#{cname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="courseRank" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="t_class" column="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="s_score"/>
+            <result property="rank" column="k"/>
+        </association>
+    </resultMap>
+    <!--查询老师带领班级的学生总记录数-->
+
+
 </mapper>

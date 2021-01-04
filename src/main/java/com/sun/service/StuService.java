@@ -35,10 +35,10 @@ public interface StuService {
     //List<Stu> queryScoreRankByCourse(Map map);
 
     //分页查询过科目平均成绩排行
-    PageBean<Stu> findCourseRankByPage(String _currentPage, String _rows, String c_name);
+    PageBean<Stu> findCourseRankByPage(String _currentPage, String _rows, String c_name,Stu stu);
 
     //分页查询平均成绩
-    PageBean<Stu> findRankByPage(String _currentPage, String _rows);
+    PageBean<Stu> findRankByPage(String _currentPage, String _rows, Stu stu);
 
     //修改密码
     int updateStuPsw(String userName, String psw);

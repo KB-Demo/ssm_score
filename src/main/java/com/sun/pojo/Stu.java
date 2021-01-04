@@ -16,8 +16,10 @@ public class Stu {
     private String s_email;
     private String s_userName;
     private String s_psw;
+    private String identity;
 
     private Score score;
     private Course course;
     private Teacher teacher;
+    private Class s_class;
 }

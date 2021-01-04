@@ -47,10 +47,11 @@ public class StuController {
 
     //修改学生信息，并跳转个人信息页面
     @RequestMapping("/updateStu")
-    public String updateStu(HttpSession session, Stu stu, Model model) {
+    public String updateStu(HttpSession session, Stu stu) {
         Stu stu1 = (Stu) session.getAttribute("stu");
         System.out.println(stu1 + "修改前");
         int i = stuService.updateStu(stu);
+        stu.setS_class(stu1.getS_class());
         System.out.println(stu + "修改后");
         if (i == 1) {
             System.out.println("修改成功");
@@ -71,14 +72,16 @@ public class StuController {
 
     //跳转平均成绩查询页面
     @RequestMapping("stuSumRank")
-    public String stuSumRank(Model model, String currentPage, String rows) {
+    public String stuSumRank(HttpSession session, Model model, String currentPage, String rows) {
         if (currentPage == null || "".equals(currentPage)) {
             currentPage = "1";
         }
         if (rows == null || "".equals(rows)) {
             rows = "5";
         }
-        PageBean<Stu> pb = stuService.findRankByPage(currentPage, rows);
+        //获取学生对象
+        Stu stu = (Stu)session.getAttribute("stu");
+        PageBean<Stu> pb = stuService.findRankByPage(currentPage, rows, stu);
         List<Stu> stus = pb.getList();
         model.addAttribute("stus", stus);
         model.addAttribute("pb", pb);
@@ -87,12 +90,14 @@ public class StuController {
 
     //跳转每科成绩排名页面
     @RequestMapping("queryRankByCname")
-    public String queryRankByCname(Model model, String currentPage, String rows, String cname) {
+    public String queryRankByCname(HttpSession session, Model model, String currentPage, String rows, String cname) {
         if (currentPage == null || "".equals(currentPage)) currentPage = "1";
         if (rows == null || "".equals(rows)) rows = "5";
         if (cname == null || "".equals(cname)) cname = "";
         System.out.println(currentPage);
-        PageBean<Stu> pb = stuService.findCourseRankByPage(currentPage, rows, cname);
+        //获取学生对象
+        Stu stu = (Stu) session.getAttribute("stu");
+        PageBean<Stu> pb = stuService.findCourseRankByPage(currentPage, rows, cname, stu);
         List<Stu> stus = pb.getList();
         model.addAttribute("stus", stus);
         model.addAttribute("pb", pb);
