@@ -8,6 +8,25 @@
     <link href="${APP_PATH}/static/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${APP_PATH}/static/css/fonts.css"type="text/css" rel="stylesheet">
     <link href="${APP_PATH}/static/css/style.css"type="text/css" rel="stylesheet">
+    <script>
+        function deleteStu(sid,cname){
+            //用户安全提示
+            if (confirm("你确定要删除吗？")) {
+                location.href="${pageContext.request.contextPath}/teacher/deleteStuScoreById?sid="+sid+"&cname="+cname;
+            }
+        }
+
+        function updateStuScore(teacher) {
+            $.ajax({
+                type:"POST",
+                url:"${pageContext.request.contextPath}/teacher/toUpdateStuScore",
+                data:'teacher='+teacher,
+                /*dataType:"json"*/
+            });
+        }
+
+
+    </script>
 </head>
 <body>
 <div class="ftdms-layout-web">
@@ -39,6 +58,8 @@
                             <ul class="nav nav-subnav">
                                 <li class="active"> <a href="${pageContext.request.contextPath}/teacher/courseStuScore">课程学生成绩</a> </li>
                                 <li> <a href="${pageContext.request.contextPath}/teacher/classStuScore">班级学生成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuAvgScore">班级学生平均成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuSumScore">班级学生总成绩</a> </li>
                             </ul>
                     </ul>
                 </nav>
@@ -58,7 +79,7 @@
                             <span class="ftdms-toggler-bar"></span>
                             <span class="ftdms-toggler-bar"></span>
                         </div>
-                        <span class="navbar-page-title"> 学生列表-课程学生 </span>
+                        <span class="navbar-page-title"> 成绩管理-课程学生成绩 </span>
                     </div>
 
                     <ul class="topbar-right">
@@ -89,6 +110,10 @@
                         <div class="card">
                             <%--class="pull-right search-bar"--%>
                             <div class="card-toolbar clearfix">
+                                <%--添加学生成绩--%>
+                                <a class="btn btn-primary m-r-5" href="${pageContext.request.contextPath}/teacher/toAddStuScore"> 添加学生成绩</a>
+                                <%--导出excel--%>
+                                <a class="btn btn-success m-r-5" href="${pageContext.request.contextPath}/teacher/courseStuRankInfo?totalCount=${pb.totalCount}&sid=${sid}&sname=${sname}&cname=${cname}"> 导出Excel</a>
                                 <%--按课程名称查询--%>
                                 <form class="form-inline pull-right" action="${pageContext.request.contextPath}/teacher/courseStuScore" method="post" >
                                     <span style="color: red;font-weight:bold">${pb.error}</span>
@@ -123,6 +148,7 @@
                                             <th>分数</th>
                                             <th>排名</th>
                                             <th>班级</th>
+                                            <th>操作</th>
                                         </tr>
                                         </thead>
 
@@ -135,6 +161,8 @@
                                                 <td>${teacher.score.s_score}</td>
                                                 <td>${teacher.score.rank}</td>
                                                 <td>${teacher.t_class.class_name}</td>
+                                                <td> <a class="btn btn-xs btn-default" href="${pageContext.request.contextPath}/teacher/toUpdateStuScore?sid=${teacher.stu.s_id}&sname=${teacher.stu.s_name}&cname=${teacher.course.c_name}&score=${teacher.score.s_score}&rank=${teacher.score.rank}&class_name=${teacher.t_class.class_name}" title="编辑" data-toggle="tooltip"><i class="ftsucai-edit-2"></i></a>
+                                                    <a class="btn btn-xs btn-default" href="javascript:deleteStu('${teacher.stu.s_id}','${teacher.course.c_name}');" title="删除" data-toggle="tooltip"><i class="ftsucai-del-2"></i></a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

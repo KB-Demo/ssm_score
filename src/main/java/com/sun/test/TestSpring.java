@@ -40,11 +40,9 @@ public class TestSpring {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         TeacherService teacherService = context.getBean("teacherServiceImpl", TeacherServiceImpl.class);
-        PageBean<Teacher> zhangsan = teacherService.findCourseStu("1", "10", "0", "zhangsan", "");
-        List<Teacher> list = zhangsan.getList();
-        for (Teacher teacher : list) {
-            System.out.println(teacher);
-        }
+        PageBean<Teacher> zhangsan = teacherService.findClassStuSumRank("1", "10", "0", "zhangsan", "");
+        Boolean aBoolean = teacherService.checkAddStu("6", "2", "88");
+        System.out.println(aBoolean);
     }
     //登录检验
     @Test

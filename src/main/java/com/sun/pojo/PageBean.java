@@ -12,6 +12,15 @@ public class PageBean<T> {
     private int currentPage;//当前页码
     private int rows;//每页显示的记录数
     private String error;
+    private String excel;
+
+    public String getExcel() {
+        return excel;
+    }
+
+    public void setExcel(String excel) {
+        this.excel = excel;
+    }
 
     public String getError() {
         return error;
@@ -69,6 +78,8 @@ public class PageBean<T> {
                 ", list=" + list +
                 ", currentPage=" + currentPage +
                 ", rows=" + rows +
+                ", error='" + error + '\'' +
+                ", excel='" + excel + '\'' +
                 '}';
     }
 }

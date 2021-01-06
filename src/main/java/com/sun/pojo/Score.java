@@ -13,4 +13,5 @@ public class Score {
     private Stu stu;
     private Course course;
     private int rank;
+    private int count;
 }

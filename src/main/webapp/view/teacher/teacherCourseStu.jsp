@@ -39,6 +39,8 @@
                             <ul class="nav nav-subnav">
                                 <li> <a href="${pageContext.request.contextPath}/teacher/courseStuScore">课程学生成绩</a> </li>
                                 <li> <a href="${pageContext.request.contextPath}/teacher/classStuScore">班级学生成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuAvgScore">班级学生平均成绩</a> </li>
+                                <li> <a href="${pageContext.request.contextPath}/teacher/classStuSumScore">班级学生总成绩</a> </li>
                             </ul>
                     </ul>
                 </nav>
@@ -89,6 +91,8 @@
                         <div class="card">
                             <%--class="pull-right search-bar"--%>
                             <div class="card-toolbar clearfix">
+                                <%--导出excel--%>
+                                <a class="btn btn-success m-r-5" href="${pageContext.request.contextPath}/teacher/courseStuInfo?totalCount=${pb.totalCount}&sid=${sid}&sname=${sname}"> 导出Excel</a>
                                 <%--按课程名称查询--%>
                                     <form class="form-inline pull-right" action="${pageContext.request.contextPath}/teacher/myCourseStu" method="post" >
                                         <span style="color: red;font-weight:bold">${pb.error}</span>
