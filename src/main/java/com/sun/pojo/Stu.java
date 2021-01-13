@@ -16,6 +16,7 @@ public class Stu {
     private String s_email;
     private String s_userName;
     private String s_psw;
+    private int class_id;
     private String identity;
 
     private Score score;

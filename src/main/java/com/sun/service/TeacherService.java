@@ -1,7 +1,7 @@
 package com.sun.service;
 
+import com.sun.pojo.Course;
 import com.sun.pojo.PageBean;
-import com.sun.pojo.Stu;
 import com.sun.pojo.Teacher;
 import org.apache.ibatis.annotations.Param;
 
@@ -72,5 +72,7 @@ public interface TeacherService {
 
     //导出Excel
     void infoExcel(PageBean pb, HttpServletResponse response);
+
+
 
 }

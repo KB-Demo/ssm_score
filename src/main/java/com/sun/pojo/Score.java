@@ -10,8 +10,10 @@ public class Score {
     private int s_id;
     private int c_id;
     private int s_score;
+    private int rank;
     private Stu stu;
     private Course course;
-    private int rank;
     private int count;
+    private Teacher teacher;
+    private Class sc_class;
 }

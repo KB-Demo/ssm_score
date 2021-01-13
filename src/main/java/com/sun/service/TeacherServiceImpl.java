@@ -160,7 +160,7 @@ public class TeacherServiceImpl implements TeacherService {
             sid = Integer.parseInt(_sid);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            pb.setError("为查到该学生");
+            pb.setError("未查到该学生");
         }
         //3.调用dao查询总记录数
         Map map = new HashMap();
@@ -202,6 +202,7 @@ public class TeacherServiceImpl implements TeacherService {
             sid = Integer.parseInt(_sid);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            pb.setError("未查到该学生");
         }
         //3.调用dao计算总记录数
         Map map = new HashMap();
@@ -243,6 +244,7 @@ public class TeacherServiceImpl implements TeacherService {
             sid = Integer.parseInt(_sid);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            pb.setError("未查到该学生");
         }
         //3.调用dao查询总记录数
         Map map = new HashMap();
@@ -283,6 +285,7 @@ public class TeacherServiceImpl implements TeacherService {
             sid = Integer.parseInt(_sid);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            pb.setError("未查到该学生");
         }
         //3.调用dao查询总记录数
         Map map = new HashMap();

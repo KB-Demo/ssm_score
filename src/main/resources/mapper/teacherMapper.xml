@@ -26,10 +26,11 @@
 
     <!--查询教师课程信息-->
     <select id="queryCourse" resultMap="teacherCourse">
-        SELECT c_id cid,c_name cname,t_name tname FROM teacher a,course b WHERE a.`t_id`=b.`t_id` AND a.`t_username`=#{username};;
+        SELECT c_id cid,c_name cname,t_name tname,row_number() over(ORDER BY b.c_id) r FROM teacher a,course b WHERE a.`t_id`=b.`t_id` AND a.`t_username`=#{username};
     </select>
     <resultMap id="teacherCourse" type="Teacher">
         <result property="t_name" column="tname"/>
+        <result property="identity" column="r"/>
         <association property="course" javaType="Course">
             <result property="c_id" column="cid"/>
             <result property="c_name" column="cname"/>

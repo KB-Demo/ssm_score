@@ -10,4 +10,9 @@ public class Course {
     private int c_id;
     private String c_name;
     private int t_id;
+
+    private Teacher teacher;
+    private Stu stu;
+    private Course course;
+
 }

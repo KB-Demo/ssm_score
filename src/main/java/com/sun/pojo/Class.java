@@ -15,4 +15,8 @@ public class Class {
     private String class_name;
     private int t_id;
 
+    private int rank;
+    private Teacher teacher;
+    private Score score;
+
 }

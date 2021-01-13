@@ -4,10 +4,247 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sun.dao.AdminMapper">
     <!--管理员登录校验-->
-    <select id="adminLoginCheck" resultType="String">
-        select a_psw from ssmscore.admin where a_username=#{userName};
+    <select id="adminLoginCheck" resultType="Admin">
+        select * from ssmscore.admin where a_username=#{userName};
     </select>
 
+    <!--查找学生信息-->
+    <select id="stuPerson" parameterType="map" resultMap="StuPerson">
+        SELECT *
+        FROM stu s, class cl
+        where s.`class_id`=cl.`class_id` <if test="sid != '0'.toString()">AND s.s_id = #{sid}</if>
+        AND s.s_name like concat('%',#{sname},'%') AND cl.class_name like concat('%',#{class_name},'%')
+        LIMIT #{startIndex},#{rows};
+    </select>
+    <resultMap id="StuPerson" type="Stu">
+        <result property="s_id" column="s_id"/>
+        <result property="s_name" column="s_name"/>
+        <result property="s_birth" column="s_birth"/>
+        <result property="s_sex" column="s_sex"/>
+        <result property="s_tel" column="s_tel"/>
+        <result property="s_email" column="s_email"/>
+        <result property="s_userName" column="s_userName"/>
+        <result property="s_psw" column="s_psw"/>
+        <association property="s_class" javaType="Class">
+            <result property="class_id" column="class_id"/>
+            <result property="class_name" column="class_name"/>
+            <result property="t_id" column="t_id"/>
+        </association>
+    </resultMap>
+    <!--查询学生总记录数-->
+    <select id="stuCount" resultType="int">
+        select count(s_id) from stu;
+    </select>
+
+    <!--查询班级-->
+    <select id="stuClass" resultType="com.sun.pojo.Class">
+        select * from class;
+    </select>
+
+    <!--添加学生-->
+    <insert id="addStu" parameterType="Stu">
+        insert into stu values(null,#{s_name},#{s_birth},#{s_sex},#{s_tel},#{s_email},#{class_id},#{s_userName},#{s_psw});
+    </insert>
+
+    <!--修改学生信息-->
+    <update id="updateStu" parameterType="Stu">
+        update ssmscore.stu set s_name=#{s_name},s_birth=#{s_birth},s_sex=#{s_sex},s_tel=#{s_tel},s_email=#{s_email},class_id=#{class_id},s_userName=#{s_userName},s_psw=#{s_psw}
+        where s_id=#{s_id};
+    </update>
+
+    <!--删除学生信息-->
+    <delete id="deleteStuById" parameterType="int">
+        delete from stu where s_id=#{sid};
+    </delete>
+    <delete id="deleteScoreById" parameterType="int">
+        delete from score where s_id=#{sid};
+    </delete>
+    <!--自动增长-->
+    <update id="auto_Stu">
+        ALTER TABLE stu AUTO_INCREMENT = 1;
+    </update>
+
+    <!--通过用户名查找密码-->
+    <select id="queryPswByUserName" parameterType="String" resultType="String">
+        select s_psw from stu where s_username=#{username};
+    </select>
+
+    <!--查找教师信息-->
+    <select id="teacherPerson" parameterType="map" resultMap="TeacherPerson">
+        SELECT *
+        FROM teacher t
+        LEFT JOIN class cl
+        ON t.`t_id`=cl.`t_id` AND t.t_name LIKE concat('%',#{tname},'%') <if test="tid != '0'.toString()">AND t.t_id=#{tid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="TeacherPerson" type="Teacher">
+        <result property="t_id" column="t_id"/>
+        <result property="t_name" column="t_name"/>
+        <result property="t_birth" column="t_birth"/>
+        <result property="t_sex" column="t_sex"/>
+        <result property="t_tel" column="t_tel"/>
+        <result property="t_email" column="t_email"/>
+        <result property="t_userName" column="t_userName"/>
+        <result property="t_psw" column="t_psw"/>
+        <association property="t_class" javaType="Class">
+            <result property="class_id" column="class_id"/>
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查找教师总记录数-->
+    <select id="teacherCount" resultType="int">
+        select count(t_id) from teacher;
+    </select>
+
+    <!--添加教师-->
+    <insert id="addTeacher" parameterType="Teacher">
+        insert into teacher values (null,#{t_name},#{t_birth},#{t_sex},#{t_tel},#{t_email},#{t_userName},#{t_psw});
+    </insert>
+    
+    <!--修改教师-->
+    <update id="updateTeacher" parameterType="Teacher">
+        update teacher set t_name=#{t_name},t_birth=#{t_birth},t_sex=#{t_sex},t_tel=#{t_tel},t_email=#{t_email},t_userName=#{t_userName},t_psw=#{t_psw}
+        where t_id=#{t_id};
+    </update>
+    
+    <!--删除教师-->
+    <delete id="deleteTeacher" parameterType="int">delete from teacher where t_id=#{tid}</delete>
+    <update id="updateCourseTeacher" parameterType="int">update course set t_id=null where t_id=#{tid}</update>
+    <update id="updateClassTeacher" parameterType="int">update class set t_id=null where t_id=#{tid}</update>
+    <!--自动增长-->
+    <update id="auto_Teacher">
+        ALTER TABLE teacher AUTO_INCREMENT = 1;
+    </update>
+
+    <!--通过教师用户名查找密码-->
+    <select id="queryPsw" parameterType="String" resultType="String">
+        select t_psw from teacher where t_username=#{username};
+    </select>
+
+    <!--查找课程信息-->
+    <select id="teacherCourse" resultMap="TeacherCourse">
+        SELECT *
+        FROM course c left join teacher t
+        on	t.`t_id`=c.`t_id` AND t.t_name like concat('%',#{tname},'%') AND c.c_name like concat('%',#{cname},'%')
+    </select>
+    <resultMap id="TeacherCourse" type="Course">
+        <result property="t_id" column="t_id"/>
+        <result property="c_id" column="c_id"/>
+        <result property="c_name" column="c_name"/>
+        <association property="teacher" javaType="Teacher">
+            <result property="t_name" column="t_name"/>
+            <result property="t_id" column="t_id"/>
+        </association>
+    </resultMap>
+
+    <!--添加课程-->
+    <insert id="addCourse">
+        insert into course values(null,#{cname},#{tid});
+    </insert>
+    <!--查询教师id和姓名-->
+    <select id="queryTeacher" resultType="Teacher">
+        select t_id,t_name from teacher;
+    </select>
+    <!--查找课程名字-->
+    <select id="queryCourseName" resultType="String" parameterType="String">
+        select c_name from course where c_name=#{cname};
+    </select>
+    <!--修改课程-->
+    <update id="updateCourse" parameterType="Course">
+        update course set c_name=#{c_name},t_id=#{t_id} where c_id=#{c_id};
+    </update>
+    <!--删除课程，自动增长-->
+    <delete id="deleteCourse" parameterType="int">
+        delete from course where c_id=#{cid};
+    </delete>
+    <update id="auto_Course">
+        ALTER TABLE course AUTO_INCREMENT = 1;
+    </update>
+
+    <!--查找班级信息-->
+    <select id="teacherClass" resultMap="TeacherClass">
+        select cl.class_id,cl.class_name,t.t_name,t.t_id
+        from class cl left join teacher t
+        on t.t_id=cl.t_id and t.t_name like concat('%',#{tname},'%') and cl.class_name like concat('%',#{class_name},'%')
+    </select>
+    <resultMap id="TeacherClass" type="com.sun.pojo.Class">
+        <result property="class_id" column="class_id"/>
+        <result property="class_name" column="class_name"/>
+        <association property="teacher" javaType="Teacher">
+            <result property="t_name" column="t_name"/>
+            <result property="t_id" column="t_id"/>
+        </association>
+    </resultMap>
+
+    <!--查询还未做班主任的教师,如果结果集中出现null,就会让sql查找不出结果，所以这里要使用ifNull函数来确保没有null值-->
+    <select id="queryFreeTeacher" resultType="Teacher">
+        SELECT * FROM teacher t WHERE t.`t_id`NOT IN(SELECT IFNULL(t_id,0) FROM class)
+    </select>
+
+    <!--查询班级-->
+    <select id="queryClassName" resultType="String" parameterType="String">
+        select class_name from class where class_name=#{class_name};
+    </select>
+
+    <!--添加班级信息-->
+    <insert id="addCLass">
+        insert into class values (null,#{class_name},#{tid});
+    </insert>
+
+    <!--修改班级信息-->
+    <update id="updateClass" parameterType="com.sun.pojo.Class">
+        update class set class_name=#{class_name},t_id=#{t_id} where class_id=#{class_id};
+    </update>
+
+    <!--删除班级信息,自动增长-->
+    <delete id="deleteClass" parameterType="int">delete from class where class_id=#{class_id}</delete>
+    <update id="auto_Class">ALTER TABLE class AUTO_INCREMENT = 1;</update>
+
+    <!--学生分数-->
+    <select id="stuScore" parameterType="map" resultMap="StuScore">
+        SELECT s.`s_id`,s.`s_name`,c.`c_name`,sc.`s_score`,cl.`class_name`,rank() over(PARTITION BY sc.c_id ORDER BY sc.s_score DESC) r,sc.c_id
+        FROM score sc,stu s,course c,class cl
+        WHERE sc.`s_id`=s.`s_id` AND sc.`c_id`=c.`c_id` AND s.`class_id`=cl.`class_id`
+        AND s.`s_name`LIKE concat('%',#{sname},'%') AND c.`c_name` LIKE concat('%',#{cname},'%')
+        AND cl.class_name LIKE concat('%',#{class_name},'%') limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="StuScore" type="Score">
+        <result property="s_score" column="s_score"/>
+        <result property="s_id" column="s_id"/>
+        <result property="c_id" column="c_id"/>
+        <result property="rank" column="r"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+        </association>
+        <association property="sc_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查询分数总记录数-->
+    <select id="scoreCount" resultType="int">
+        select count(*) from score;
+    </select>
+
+    <!--班级平均分-->
+    <select id="classScore" parameterType="map" resultMap="ClassScore">
+        SELECT cl.class_name,b.avg,t.`t_name`,rank() over(ORDER BY b.avg DESC) r
+        FROM class cl,teacher t,(SELECT s.`class_id`,AVG(sc.`s_score`) AVG FROM score sc,stu s WHERE sc.`s_id`=s.`s_id`GROUP BY s.`class_id`) b
+        WHERE cl.class_id=b.class_id AND t.`t_id`=cl.t_id AND cl.class_name LIKE concat('%',#{class_name},'%') AND t.`t_name`LIKE concat('%',#{tname},'%');
+    </select>
+    <resultMap id="ClassScore" type="com.sun.pojo.Class">
+        <result property="class_name" column="class_name"/>
+        <result property="rank" column="r"/>
+        <association property="teacher" javaType="Teacher">
+            <result property="t_name" column="t_name"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="avg"/>
+        </association>
+    </resultMap>
+    
 
 
 </mapper>

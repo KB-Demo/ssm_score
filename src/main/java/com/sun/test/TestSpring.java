@@ -1,8 +1,7 @@
 package com.sun.test;
 
-import com.sun.pojo.PageBean;
-import com.sun.pojo.Stu;
-import com.sun.pojo.Teacher;
+import com.sun.pojo.*;
+import com.sun.pojo.Class;
 import com.sun.service.*;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -50,15 +49,41 @@ public class TestSpring {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         AdminService adminService = context.getBean("adminServiceImpl", AdminServiceImpl.class);
-        String a = "";
-        String error=null;
-        int i = 0;
-        try {
-            i = Integer.parseInt(a);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            error = "为查";
+        Map map = new HashMap();
+        map.put("startIndex", 0);
+        map.put("rows", 100);
+        map.put("sid", 0);
+        map.put("sname", "");
+        map.put("class_name", "");
+        //PageBean<Stu> stuPageBean = adminService.adminStuPerson("", "", "0", "100", "a");
+        //PageBean<Teacher> stuPageBean = adminService.adminTeacherPerson("", "0", "0", "100");
+        //PageBean<Score> stuPageBean = adminService.adminStuScore("","","",  "0", "100");
+        /*List<Score> list = stuPageBean.getList();
+        for (Score stu : list) {
+            System.out.println(stu);
+        }*/
+       /* List<Course> courses = adminService.adminTeacherCourse("", "");
+        for (Course cours : courses) {
+            System.out.println(cours);
         }
-        System.out.println(error);
+        List<Class> classes = adminService.adminClassScore("", "");
+        for (Class aClass : classes) {
+            System.out.println(aClass);
+        }*/
+       //new Stu(null,"张张","1997-5-06","女","156456165","156156@qq.com","123456","123456")
+      /* Stu stu = new Stu();
+        stu.setS_name("张张");
+        stu.setS_birth("1997-5-06");
+        stu.setS_sex("女");
+        int i = adminService.addStu(stu);
+        System.out.println(i);*/
+        /*List<Class> classes = adminService.adminTeacherClass("", "");
+        for (Class aClass : classes) {
+            System.out.println(aClass);
+        }*/
+        List<Class> classes = adminService.adminTeacherClass("", "张");
+        for (Class aClass : classes) {
+            System.out.println(aClass);
+        }
     }
 }

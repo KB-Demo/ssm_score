@@ -1,5 +1,6 @@
 package com.sun.controller;
 
+import com.sun.pojo.Admin;
 import com.sun.pojo.Stu;
 import com.sun.pojo.Teacher;
 import com.sun.service.AdminService;
@@ -79,15 +80,14 @@ public class LoginController {
             //管理员登录校验
             session.setAttribute("logger","admin");
             System.out.println("管理员登录"+userName+"-"+psw);
-            String check_psw = adminService.adminLoginCheck(userName);
-            if (psw != null && psw.equals(check_psw)) {
+            Admin admin = adminService.adminLoginCheck(userName);
+            if (psw != null && psw.equals(admin.getA_psw())) {
                 System.out.println("管理员账号密码正确");
-                session.setAttribute("login_msg", userName);
+                session.setAttribute("username", userName);
                 //管理员首页
-                return "";
+                return "redirect:/admin/stuPerson";
             } else {
                 session.setAttribute("login_msg","登录失败,账号或密码错误！");
-
                 return "login";
             }
         }
