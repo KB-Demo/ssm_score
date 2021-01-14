@@ -1,11 +1,10 @@
 package com.sun.service;
 
-import com.sun.pojo.PageBean;
+import com.sun.utils.PageBean;
 import com.sun.pojo.Stu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface StuService {
     //添加一名学生

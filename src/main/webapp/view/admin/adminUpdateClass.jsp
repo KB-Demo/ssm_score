@@ -104,7 +104,7 @@
                                                 <span style="color: red;font-weight:bold">${error}</span>
                                                 <div class="form-group">
                                                     <label for="example-nf-name">班级名称</label>
-                                                    <input class="form-control" name="class_name" type="text" value="${class_name}" id="example-nf-name" >
+                                                    <input class="form-control" name="class_name" type="text" value="${class_name}" id="example-nf-name" required="required">
                                                 </div>
                                                 <span style="color: red;font-weight:bold">${error1}</span>
                                                 <div class="form-group">

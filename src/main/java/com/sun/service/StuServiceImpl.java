@@ -1,7 +1,7 @@
 package com.sun.service;
 
 import com.sun.dao.StuMapper;
-import com.sun.pojo.PageBean;
+import com.sun.utils.PageBean;
 import com.sun.pojo.Stu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

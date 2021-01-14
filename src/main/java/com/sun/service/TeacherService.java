@@ -1,9 +1,7 @@
 package com.sun.service;
 
-import com.sun.pojo.Course;
-import com.sun.pojo.PageBean;
+import com.sun.utils.PageBean;
 import com.sun.pojo.Teacher;
-import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

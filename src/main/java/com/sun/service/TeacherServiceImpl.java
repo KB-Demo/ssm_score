@@ -1,8 +1,8 @@
 package com.sun.service;
 
 import com.sun.dao.TeacherMapper;
-import com.sun.pojo.TeacherExcelUtil;
-import com.sun.pojo.PageBean;
+import com.sun.utils.TeacherExcelUtil;
+import com.sun.utils.PageBean;
 import com.sun.pojo.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -105,11 +105,11 @@
                                                 <input type="hidden" name="s_id" value="${s_id}"> <input type="hidden" name="oldUserName" value="${s_userName}">
                                                 <div class="form-group">
                                                     <label for="example-nf-name">姓名</label>
-                                                    <input class="form-control" name="s_name" type="text" id="example-nf-name" value="${s_name}" >
+                                                    <input class="form-control" name="s_name" type="text" id="example-nf-name" value="${s_name}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-birth">出生日期</label>
-                                                    <input class="form-control" name="s_birth" type="date" id="example-nf-birth" value="${s_birth}" >
+                                                    <input class="form-control" name="s_birth" type="date" id="example-nf-birth" value="${s_birth}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>性别</label>
@@ -136,11 +136,11 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-tel">电话</label>
-                                                    <input class="form-control" name="s_tel" type="text" id="example-nf-tel" value="${s_tel}">
+                                                    <input class="form-control" name="s_tel" type="text" id="example-nf-tel" value="${s_tel}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-email">邮箱</label>
-                                                    <input class="form-control" name="s_email" type="email" id="example-nf-email" value="${s_email}" >
+                                                    <input class="form-control" name="s_email" type="email" id="example-nf-email" value="${s_email}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="class_id">班级选择</label>
@@ -154,11 +154,11 @@
                                                 <span style="color: red;font-weight:bold">${error}</span>
                                                 <div class="form-group">
                                                     <label for="example-nf-username">用户名</label>
-                                                    <input class="form-control" name="s_userName" type="text" id="example-nf-username" value="${s_userName}">
+                                                    <input class="form-control" name="s_userName" type="text" id="example-nf-username" value="${s_userName}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-psw">密码</label>
-                                                    <input class="form-control" name="s_psw" type="text" id="example-nf-psw" value="${s_psw}" >
+                                                    <input class="form-control" name="s_psw" type="text" id="example-nf-psw" value="${s_psw}" required="required">
                                                 </div>
                                                 <div class="example-box" style="text-align: center">
                                                     <input class="btn btn-success btn-w-md" type="submit" value="提交" />

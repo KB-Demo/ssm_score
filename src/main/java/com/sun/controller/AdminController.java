@@ -1,15 +1,15 @@
 package com.sun.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.sun.pojo.*;
 import com.sun.pojo.Class;
 import com.sun.service.AdminService;
+import com.sun.utils.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import sun.security.x509.OtherName;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -214,6 +214,8 @@ public class AdminController {
         List<Course> courses = adminService.adminTeacherCourse(tname, cname);
         if (courses.size()==0) model.addAttribute("error", "未查到该课程");
         model.addAttribute("courses", courses);
+        model.addAttribute("cname", cname);
+        model.addAttribute("tname", tname);
         return "admin/adminCourses";
     }
 
@@ -290,6 +292,8 @@ public class AdminController {
         List<Class> classes = adminService.adminTeacherClass(class_name, tname);
         if (classes.size() == 0) model.addAttribute("error", "未查到该班级");
         model.addAttribute("classes", classes);
+        model.addAttribute("class_name", class_name);
+        model.addAttribute("tname", tname);
         return "admin/adminClasses";
     }
 
@@ -411,21 +415,110 @@ public class AdminController {
         List<Class> classes = adminService.adminClassScore(class_name, tname);
         if (classes.size()==0) model.addAttribute("error", "未查到该内容");
         model.addAttribute("classes", classes);
+        model.addAttribute("class_name", class_name);
+        model.addAttribute("tname", tname);
         return "admin/adminClassAvgScore";
     }
 
+    /***************************************************** 导出Excel **********************************************************************/
+    @RequestMapping("stuPersonInfo")
+    public void stuPersonInfo(HttpServletResponse response, String totalCount, String sid, String sname, String class_name) {
+        PageBean<Stu> pb = adminService.adminStuPerson(sname, class_name, "0", totalCount, sid);
+        pb.setExcel("stuPerson");
+        adminService.infoExcelByPageBean(response, pb);
+    }
+
+    @RequestMapping("teacherPersonInfo")
+    public void teacherPersonInfo(HttpServletResponse response, String totalCount, String tid, String tname) {
+        if (tid==null || tid=="") tid = "0";
+        if (tname==null) tname = "";
+        PageBean<Teacher> pb = adminService.adminTeacherPerson(tname, tid, "0", totalCount);
+        pb.setExcel("teacherPerson");
+        adminService.infoExcelByPageBean(response, pb);
+    }
+
+    @RequestMapping("stuScoreInfo")
+    public void stuScoreInfo(HttpServletResponse response, String totalCount, String sname, String class_name, String cname) {
+        if (sname==null) sname = "";
+        if (class_name==null) class_name = "";
+        if (cname==null) cname = "";
+        PageBean<Score> pb = adminService.adminStuScore(sname, cname, class_name, "0", totalCount);
+        pb.setExcel("stuScore");
+        adminService.infoExcelByPageBean(response, pb);
+    }
+
+    @RequestMapping("coursesInfo")
+    public void coursesInfo(HttpServletResponse response, String cname, String tname) {
+        if (cname==null) cname = "";
+        if (tname==null) tname = "";
+        List<Course> courses = adminService.adminTeacherCourse(tname, cname);
+        String excel_msg = "courses";
+        adminService.infoExcelByList(response, courses, excel_msg);
+    }
+
+    @RequestMapping("classesInfo")
+    public void classesInfo(HttpServletResponse response, String class_name, String tname) {
+        if (tname==null) tname = "";
+        if (class_name==null) class_name = "";
+        List<Class> classes = adminService.adminTeacherClass(class_name, tname);
+        String excel_msg = "classes";
+        adminService.infoExcelByList(response, classes, excel_msg);
+    }
+
+    @RequestMapping("classAvgScoreInfo")
+    public void classAvgScoreInfo(HttpServletResponse response, String tname, String class_name) {
+        if (class_name==null) class_name = "";
+        if (tname==null) tname = "";
+        List<Class> classes = adminService.adminClassScore(class_name, tname);
+        String excel_msg = "classAvgScore";
+        adminService.infoExcelByList(response, classes, excel_msg);
+    }
+
+    /***************************************************** 其他业务 **********************************************************************/
     //跳转修改密码页面
     @RequestMapping("toChangePsw")
     public String toChangPsw() {
-
         return "admin/adminChangePsw";
     }
 
     //修改密码，成功跳转登录页面，失败跳转修改页面
     @RequestMapping("changePsw")
-    public String ChangePsw() {
-
-        return "login";
+    public String ChangePsw(HttpSession session, Model model,String oldPsw,String newPsw,String confirmPsw) {
+        String username = (String) session.getAttribute("username");
+        Admin admin = adminService.adminLoginCheck(username);
+        String psw = admin.getA_psw();
+        if ("".equals(oldPsw) || oldPsw == null) {
+            model.addAttribute("error_OldPsw", "   请输入正确格式！");
+            return "teacher/teacherChangePsw";
+        }
+        if (newPsw == null || "".equals(newPsw) || confirmPsw == null || "".equals(confirmPsw)) {
+            model.addAttribute("error_NewPsw", "   请输入正确格式！");
+            return "teacher/teacherChangePsw";
+        }
+        //去除首位字符串
+        System.out.println("newPsw:"+newPsw+" confirmPsw:"+confirmPsw);
+        oldPsw = oldPsw.trim();
+        newPsw = newPsw.trim();
+        confirmPsw = confirmPsw.trim();
+        System.out.println("newPsw:"+newPsw+" confirmPsw:"+confirmPsw);
+        if (!psw.equals(oldPsw)) {
+            model.addAttribute("error_OldPsw", "   旧密码错误！");
+            return "admin/adminChangePsw";
+        } else if (!newPsw.equals(confirmPsw)) {
+            model.addAttribute("error_NewPsw", "   请输入相同的新密码！");
+            return "admin/adminChangePsw";
+        } else if (psw.equals(newPsw)) {
+            model.addAttribute("error_NewPsw", "   新旧密码相同,请重新输入！");
+            return "admin/adminChangePsw";
+        } else if (newPsw.contains(" ")) {
+            model.addAttribute("error_NewPsw", "   密码不能包含特殊字符！");
+            return "admin/adminChangePsw";
+        } else {
+            adminService.updateAdminPsw(username, newPsw);
+            model.addAttribute("login_msg", "密码修改请重新登录");
+            session.removeAttribute("username");
+            return "login";
+        }
     }
 
     //退出登录

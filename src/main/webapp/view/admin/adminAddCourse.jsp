@@ -99,7 +99,7 @@
                                             <form action="${pageContext.request.contextPath}/admin/addCourse" method="post">
                                                 <div class="form-group">
                                                     <label for="example-nf-name">课程名称</label>
-                                                    <input class="form-control" name="c_name" type="text" id="example-nf-name" >
+                                                    <input class="form-control" name="c_name" type="text" id="example-nf-name" required="required" >
                                                 </div>
 
                                                 <div class="form-group">

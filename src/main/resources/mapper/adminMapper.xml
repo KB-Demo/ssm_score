@@ -244,6 +244,11 @@
             <result property="s_score" column="avg"/>
         </association>
     </resultMap>
+
+    <!--修改密码-->
+    <update id="updateAdminPsw" parameterType="String">
+        update admin set a_psw=#{psw} where a_username=#{username};
+    </update>
     
 
 

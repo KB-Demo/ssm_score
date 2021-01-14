@@ -92,7 +92,7 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <form method="post" action="${pageContext.request.contextPath}/teacher/changePsw" class="site-form">
+                                <form method="post" action="${pageContext.request.contextPath}/admin/changePsw" class="site-form">
                                     <div class="form-group">
                                         <label for="old-password">旧密码</label><span style="color: red;font-weight:bold">${error_OldPsw}</span>
                                         <input type="password" class="form-control" name="oldPsw" id="old-password" placeholder="输入账号的原登录密码">

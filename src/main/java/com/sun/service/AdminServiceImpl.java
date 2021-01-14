@@ -3,9 +3,13 @@ package com.sun.service;
 import com.sun.dao.AdminMapper;
 import com.sun.pojo.*;
 import com.sun.pojo.Class;
+import com.sun.utils.AdminExcelUtil;
+import com.sun.utils.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +28,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PageBean<Stu> adminStuPerson(String sname, String class_name, String _currentPage, String _rows,String _sid) {
+    public PageBean<Stu> adminStuPerson(String sname, String class_name, String _currentPage, String _rows, String _sid) {
         //1.创建PageBean对象
         PageBean<Stu> pb = new PageBean<>();
         //2.设置参数
@@ -344,6 +348,30 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public int deleteClass(int class_id) {
         return adminMapper.deleteClass(class_id)+adminMapper.auto_Class();
+    }
+
+    @Override
+    public void infoExcelByPageBean(HttpServletResponse response, PageBean pb) {
+        AdminExcelUtil adminExcelUtil = new AdminExcelUtil();
+        try {
+            adminExcelUtil.InfoExcelByPageBean(response, pb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void infoExcelByList(HttpServletResponse response, List list, String excel_msg) {
+        try {
+            new AdminExcelUtil().InfoExcelByList(response, list, excel_msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int updateAdminPsw(String userName, String psw) {
+        return adminMapper.updateAdminPsw(userName, psw);
     }
 
     public int stringToInt(String str) {

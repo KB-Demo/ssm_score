@@ -2,8 +2,9 @@ package com.sun.service;
 
 import com.sun.pojo.*;
 import com.sun.pojo.Class;
-import org.apache.ibatis.annotations.Param;
+import com.sun.utils.PageBean;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface AdminService {
@@ -12,7 +13,7 @@ public interface AdminService {
     Admin adminLoginCheck(String userName);
 
     //查找学生信息
-    PageBean<Stu> adminStuPerson(String sname, String class_name, String _currentPage, String _rows,String _sid);
+    PageBean<Stu> adminStuPerson(String sname, String class_name, String _currentPage, String _rows, String _sid);
 
     //查找教师信息
     PageBean<Teacher> adminTeacherPerson(String tname, String t_id, String _currentPage, String _rows);
@@ -85,5 +86,14 @@ public interface AdminService {
 
     //删除班级信息
     int deleteClass(int class_id);
+
+    //导出Excel,分页
+    void infoExcelByPageBean(HttpServletResponse response, PageBean pb);
+
+    //导出Excel，不分页
+    void infoExcelByList(HttpServletResponse response, List list, String excel_msg);
+
+    //修改密码
+    int updateAdminPsw(String userName, String psw);
 
 }

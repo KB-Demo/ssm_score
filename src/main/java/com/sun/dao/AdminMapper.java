@@ -103,7 +103,7 @@ public interface AdminMapper {
     //班级平均分
     List<Class> classScore(@Param("class_name") String class_name, @Param("tname") String tname);
 
-
-
+    //修改密码
+    int updateAdminPsw(@Param("username") String userName, @Param("psw") String psw);
 
 }

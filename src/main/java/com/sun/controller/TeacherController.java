@@ -1,6 +1,6 @@
 package com.sun.controller;
 
-import com.sun.pojo.PageBean;
+import com.sun.utils.PageBean;
 import com.sun.pojo.Teacher;
 import com.sun.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;

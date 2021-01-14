@@ -90,7 +90,7 @@
                                 <%--添加教师--%>
                                 <a class="btn btn-primary m-r-5" href="${pageContext.request.contextPath}/admin/toAddTeacher"> 添加教师</a>
                                 <%--导出excel--%>
-                                <a class="btn btn-success m-r-5" href="${pageContext.request.contextPath}/teacher/classStuSumRankInfo?totalCount=${pb.totalCount}&sid=${sid}&sname=${sname}"> 导出Excel</a>
+                                <a class="btn btn-success m-r-5" href="${pageContext.request.contextPath}/admin/teacherPersonInfo?totalCount=${pb.totalCount}&tid=${tid}&tname=${tname}"> 导出Excel</a>
                                 <%--按课程名称查询--%>
                                 <form class="form-inline pull-right" action="${pageContext.request.contextPath}/admin/teacherPerson" method="post" >
                                     <span style="color: red;font-weight:bold">${pb.error}</span>

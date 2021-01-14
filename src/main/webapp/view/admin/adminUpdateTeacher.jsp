@@ -105,11 +105,11 @@
                                                 <input type="hidden" name="t_id" value="${t_id}"> <input type="hidden" name="oldUserName" value="${t_userName}">
                                                 <div class="form-group">
                                                     <label for="example-nf-name">姓名</label>
-                                                    <input class="form-control" name="t_name" type="text" id="example-nf-name" value="${t_name}" >
+                                                    <input class="form-control" name="t_name" type="text" id="example-nf-name" value="${t_name}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-birth">出生日期</label>
-                                                    <input class="form-control" name="t_birth" type="date" id="example-nf-birth" value="${t_birth}" >
+                                                    <input class="form-control" name="t_birth" type="date" id="example-nf-birth" value="${t_birth}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>性别</label>
@@ -136,20 +136,20 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-tel">电话</label>
-                                                    <input class="form-control" name="t_tel" type="text" id="example-nf-tel" value="${t_tel}">
+                                                    <input class="form-control" name="t_tel" type="text" id="example-nf-tel" value="${t_tel}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-email">邮箱</label>
-                                                    <input class="form-control" name="t_email" type="email" id="example-nf-email" value="${t_email}" >
+                                                    <input class="form-control" name="t_email" type="email" id="example-nf-email" value="${t_email}" required="required">
                                                 </div>
                                                 <span style="color: red;font-weight:bold">${error}</span>
                                                 <div class="form-group">
                                                     <label for="example-nf-username">用户名</label>
-                                                    <input class="form-control" name="t_userName" type="text" id="example-nf-username" value="${t_userName}">
+                                                    <input class="form-control" name="t_userName" type="text" id="example-nf-username" value="${t_userName}" required="required">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="example-nf-psw">密码</label>
-                                                    <input class="form-control" name="t_psw" type="text" id="example-nf-psw" value="${t_psw}" >
+                                                    <input class="form-control" name="t_psw" type="text" id="example-nf-psw" value="${t_psw}" required="required">
                                                 </div>
                                                 <div class="example-box" style="text-align: center">
                                                     <input class="btn btn-success btn-w-md" type="submit" value="提交" />
