@@ -20,19 +20,12 @@
   </properties>
 
   <dependencies>
-   <!-- &lt;!&ndash;bootstrap&ndash;&gt;
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>bootstrap</artifactId>
-      <version>3.3.5</version>
-    </dependency>
-
-    &lt;!&ndash;JQuery&ndash;&gt;
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>jquery</artifactId>
-      <version>3.1.1</version>
-    </dependency>-->
+    <!--测试-->
+      <dependency>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+      </dependency>
 
     <!--Junit-->
     <dependency>
@@ -40,18 +33,21 @@
       <artifactId>junit</artifactId>
       <version>4.12</version>
     </dependency>
+
     <!--数据库驱动-->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.21</version>
     </dependency>
+
     <!--数据库连接池-->
     <dependency>
       <groupId>com.mchange</groupId>
       <artifactId>c3p0</artifactId>
       <version>0.9.5.2</version>
     </dependency>
+
     <!--Servlet - JSP -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -68,6 +64,7 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
+
     <!--Mybatis-->
     <dependency>
       <groupId>org.mybatis</groupId>
@@ -92,6 +89,13 @@
       <version>5.1.9.RELEASE</version>
     </dependency>
 
+      <!--spring-json依赖-->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.9.4</version>
+      </dependency>
+
     <!--Lombok-->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -107,37 +111,24 @@
 
     <!--json-->
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-        <version>2.9.6</version>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20160810</version>
     </dependency>
+
+    <!--json转换器-->
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>2.9.6</version>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.47</version>
     </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.9.6</version>
-    </dependency>
-      <dependency>
-          <groupId>com.rover12421</groupId>
-          <artifactId>fastjson</artifactId>
-          <version>1.2.47</version>
-      </dependency>
-      <dependency>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations-java5</artifactId>
-          <version>RELEASE</version>
-          <scope>compile</scope>
-      </dependency>
+
       <!--jquery-->
-      <dependency>
-          <groupId>org.webjars.bower</groupId>
-          <artifactId>jquery</artifactId>
-          <version>3.4.1</version>
-      </dependency>
+    <dependency>
+      <groupId>org.webjars.bower</groupId>
+      <artifactId>jquery</artifactId>
+      <version>3.3.1</version>
+    </dependency>
 
       <!--导出Excel表格需要的poi-->
       <dependency>
@@ -174,7 +165,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>2.3.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.TeacherMapper">
+
+    <!--教师登录校验-->
+    <select id="teacherLoginCheck" resultType="String">
+        select t_psw from ssmscore.teacher where t_username=#{userName};
+    </select>
+
+    <!--通过ID查找教师-->
+    <select id="queryTeacherById" resultType="Teacher">
+        select * from ssmscore.teacher where t_id=#{t_id};
+    </select>
+
+    <!--教师用户注册-->
+    <update id="teacherRegistered">
+        update ssmscore.teacher set t_username=#{username},t_psw=#{psw} where t_id=#{t_id};
+    </update>
+
+    <!--教师密码修改-->
+    <update id="updateTeacherPsw" parameterType="String">
+        update ssmscore.teacher set t_psw=#{newPsw} where t_username=#{username};
+    </update>
+
+    <!--查询教师课程信息-->
+    <select id="queryCourse" resultMap="teacherCourse">
+        SELECT c_id cid,c_name cname,credit credit,t_name tname,row_number() over(ORDER BY b.c_id) r
+        FROM teacher a,course b
+        WHERE a.`t_id`=b.`t_id` AND a.`t_username`=#{username};
+    </select>
+    <resultMap id="teacherCourse" type="Teacher">
+        <result property="t_name" column="tname"/>
+        <result property="identity" column="r"/>
+        <association property="course" javaType="Course">
+            <result property="c_id" column="cid"/>
+            <result property="c_name" column="cname"/>
+            <result property="credit" column="credit"/>
+        </association>
+    </resultMap>
+
+    <!--查询教师个人信息-->
+    <select id="queryTeacherPersonal" resultMap="personal">
+        SELECT a.t_id,a.`t_name`,a.t_birth,a.`t_sex`,b.`class_name`,a.`t_tel`,a.`t_email`,a.t_position,a.t_education,p.p_name,f.f_name
+        FROM teacher a,class b,faculty f,profession p
+        WHERE b.p_id=p.p_id AND p.f_id=f.f_id AND a.`t_id`=b.`t_id` AND a.`t_username`=#{username};
+    </select>
+    <resultMap id="personal" type="Teacher">
+        <result property="t_id" column="t_id"/>
+        <result property="t_name" column="t_name"/>
+        <result property="t_birth" column="t_birth"/>
+        <result property="t_sex" column="t_sex"/>
+        <result property="t_tel" column="t_tel"/>
+        <result property="t_email" column="t_email"/>
+        <result property="t_position" column="t_position"/>
+        <result property="t_education" column="t_education"/>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+        <association property="profession" javaType="Profession">
+            <result property="p_name" column="p_name"></result>
+        </association>
+        <association property="faculty" javaType="Faculty">
+            <result property="f_name" column="f_name"/>
+        </association>
+    </resultMap>
+
+    <!--修改教师个人信息-->
+    <update id="updateTeacher" parameterType="Teacher">
+        update teacher set t_name=#{t_name},t_birth=#{t_birth},t_sex=#{t_sex},t_tel=#{t_tel},t_email=t_email where t_id=#{t_id};
+    </update>
+
+    <!--查询老师课程的学生-->
+    <select id="queryTeacherCourseStu" resultMap="teacherStuCourse">
+        SELECT s.`s_id`,s.`s_name`,s.`s_birth`,s.`s_sex`,s.`s_tel`,s.`s_email`,c.`c_name`,cl.`class_name`,p.p_name,f.f_name,row_number() over(ORDER BY s.s_id DESC) as identity
+        FROM stu s,teacher t,course c,score sc,class cl,faculty f,profession p
+        WHERE s.s_id=sc.`s_id` AND sc.`c_id`=c.`c_id`AND c.`t_id`=t.`t_id`AND cl.class_id=s.class_id AND p.p_id=cl.p_id AND p.f_id = f.f_id
+        AND t.`t_username`=#{username} AND s.`s_name`LIKE concat('%',#{sname},'%')
+        <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="teacherStuCourse" type="Teacher">
+        <result property="identity" column="identity"/>
+        <result property="identity" column="identity"/>
+        <association property="profession" javaType="Profession">
+            <result property="p_name" column="p_name"></result>
+        </association>
+        <association property="faculty" javaType="Faculty">
+            <result property="f_name" column="f_name"/>
+        </association>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="s_birth" column="s_birth"/>
+            <result property="s_sex" column="s_sex"/>
+            <result property="s_tel" column="s_tel"/>
+            <result property="s_email" column="s_email"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+        </association>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查询老师课程学生的总记录数-->
+    <select id="queryCourseStuCount" parameterType="map" resultType="int" >
+        SELECT COUNT(sc.`s_id`)
+        FROM score sc,teacher t,course c,stu s
+        WHERE s.`s_id`=sc.`s_id` AND sc.`c_id`=c.`c_id` AND c.`t_id`=t.`t_id`
+        AND t.`t_username`=#{username}
+        AND c.c_name LIKE concat('%',#{cname},'%') AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if>;
+    </select>
+
+
+    <!--查询老师带领班级的学生信息-->
+    <select id="queryTeacherClassStu" resultMap="teacherStuClass">
+        SELECT  s.`s_id`,s.`s_name`,s.`s_birth`,s.`s_sex`,s.`s_tel`,s.`s_email`,cl.`class_name`,row_number() over(ORDER BY s.s_id DESC) as identity
+        FROM 	teacher t,class cl,stu s
+        WHERE  	t.`t_id`=cl.`t_id` AND cl.`class_id`=s.`class_id`
+        AND t.`t_username`=#{username} AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="teacherStuClass" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="s_birth" column="s_birth"/>
+            <result property="s_sex" column="s_sex"/>
+            <result property="s_tel" column="s_tel"/>
+            <result property="s_email" column="s_email"/>
+        </association>
+        <association property="t_class" javaType="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+    </resultMap>
+    <!--查询老师带领班级学生的总记录数-->
+    <select id="queryClassStuCount" parameterType="map" resultType="int">
+        SELECT COUNT(s.`s_id`)
+        FROM teacher t,class cl,stu s
+        WHERE t.`t_id`=cl.`t_id` AND cl.`class_id`=s.`class_id` AND t.`t_username`=#{username}
+        AND s.`s_name`LIKE concat('%',#{sname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if>;
+    </select>
+
+    <!--查询老师课程的学生成绩排行-->
+    <select id="queryTeacherCourseStuRank" resultMap="courseRank">
+        select * from (
+            SELECT s.`s_id`,s.`s_name`,cl.class_name,b.c_name,b.`t_username`,b.credit,b.s_score,rank() over(PARTITION BY b.c_name ORDER BY b.s_score DESC) k,b.r identity
+            FROM stu s,class cl,(SELECT  c.`c_id`,c.`c_name`,c.credit,t.`t_username`,sc.`s_id`,sc.`s_score`,row_number() over(ORDER BY sc.s_score DESC) r
+            FROM course c,score sc,teacher t WHERE c.`c_id`=sc.`c_id` AND c.`t_id`=t.`t_id` )b
+            WHERE s.s_id=b.s_id AND cl.`class_id`=s.`class_id`) x
+        where x.`t_username`=#{username} AND x.`s_name`LIKE concat('%',#{sname},'%')
+        AND x.c_name LIKE concat('%',#{cname},'%') <if test="sid != '0'.toString()">AND x.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="courseRank" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="t_class" column="com.sun.pojo.Class">
+            <result property="class_name" column="class_name"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+            <result property="credit" column="credit"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="s_score"/>
+            <result property="rank" column="k"/>
+        </association>
+    </resultMap>
+    <!--查询老师带领班级的学生总记录数-->
+
+    <!--查询老师带领班级的学生成绩排行-->
+    <select id="queryTeacherClassStuRank" resultMap="classRank">
+        select * from (
+        SELECT  s.`s_id`,s.`s_name`,t.t_name,b.c_name,b.credit,b.s_score, cl.`t_id`,rank() over(PARTITION BY b.c_name ORDER BY b.s_score DESC) k,b.r identity
+        FROM  stu s,class cl,teacher t,(SELECT sc.`s_id`,c.t_id,c.credit,c.`c_name`,sc.`s_score`,row_number() over(ORDER BY sc.s_score) r
+            FROM course c,score sc WHERE sc.`c_id`=c.`c_id`) b
+        WHERE s.`s_id`=b.s_id AND t.`t_id`=(SELECT t_id FROM teacher WHERE t_username=#{username}) AND s.`class_id`=cl.`class_id` AND t.t_id=b.t_id ) x
+        where  x.`s_name`LIKE concat('%',#{sname},'%')
+        AND x.c_name LIKE concat('%',#{cname},'%') <if test="sid != '0'.toString()">AND x.`s_id`= #{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="classRank" type="Teacher">
+        <result property="t_name" column="t_name"/>
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+            <result property="credit" column="credit"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="s_score"/>
+            <result property="rank" column="k"/>
+        </association>
+    </resultMap>
+    <!--查询老师带领班级学生成绩的数量：分页查询需要统计数量-->
+    <select id="queryClassStuRankCount" parameterType="map" resultType="int">
+        SELECT COUNT(s.`s_id`)
+        FROM score sc,stu s,class cl,teacher t,course c
+        WHERE sc.`s_id`=s.`s_id` AND s.`class_id`=cl.`class_id` AND t.`t_id`=cl.`t_id`AND c.`c_id`=sc.`c_id`
+        AND t.`t_username` =#{username} AND s.`s_name`LIKE concat('%',#{sname},'%')
+        AND c.c_name LIKE concat('%',#{cname},'%') <if test="sid != '0'.toString()">AND s.`s_id`= #{sid}</if>
+    </select>
+
+    <!--查询老师带领班级的学生平均成绩排行-->
+    <select id="queryTeacherClassStuAvgRank" resultMap="classAvgRank">
+        select * from (
+        SELECT s.`s_id`,s.`s_name`,b.score,rank() over(ORDER BY b.score DESC) k,b.r identity
+        FROM stu s,teacher t,class cl,(SELECT s_id,AVG(s_score) score,row_number() over(ORDER BY AVG(s_score) DESC) r FROM score GROUP BY s_id) b
+        WHERE s.`s_id`=b.s_id AND t.`t_username`=#{username} AND s.`class_id`=cl.`class_id`  AND t.`t_id`=cl.`t_id`) x
+        where  x.s_name LIKE concat('%',#{sname},'%') <if test="sid !='0'.toString()">AND x.s_id=#{sid}</if> limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="classAvgRank" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="score"/>
+            <result property="rank" column="k"/>
+        </association>
+    </resultMap>
+
+    <!--查询老师带领班级的学生总成绩排行-->
+    <select id="queryTeacherClassStuSumRank" resultMap="classSumRank">
+        select * from(
+        SELECT s.`s_id`,s.`s_name`,b.score,rank() over(ORDER BY b.score DESC) k,b.count,b.r identity
+        FROM stu s,teacher t,class cl,(SELECT  s_id,SUM(s_score) score,COUNT(c_id) count,row_number() over(ORDER BY SUM(s_score) DESC) r FROM score GROUP BY s_id) b
+        WHERE s.`s_id`=b.s_id AND s.`class_id`=cl.`class_id` AND t.`t_id`=cl.`t_id`AND t.`t_username`=#{username}) x
+        where x.s_name LIKE concat('%',#{sname},'%') <if test="sid !='0'.toString()">AND x.s_id=#{sid}</if>limit #{startIndex},#{rows};
+    </select>
+    <resultMap id="classSumRank" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="stu" javaType="Stu">
+            <result property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+        <association property="score" javaType="Score">
+            <result property="s_score" column="score"/>
+            <result property="rank" column="k"/>
+            <result property="count" column="count"/>
+        </association>
+    </resultMap>
+
+    <!--通过老师用户名查询老师课程-->
+    <select id="queryTeacherCourse" resultMap="teacherCourses">
+        SELECT c.`c_name`,c.`c_id`,c.credit,row_number() over(ORDER BY c.c_id) identity
+        FROM teacher t,course c
+        WHERE t.`t_id`=c.`t_id` AND t.`t_username`=#{username};
+    </select>
+    <resultMap id="teacherCourses" type="Teacher">
+        <result property="identity" column="identity"/>
+        <association property="course" javaType="Course">
+            <result property="c_name" column="c_name"/>
+            <result property="c_id" column="c_id"/>
+            <result property="credit" column="credit"/>
+        </association>
+    </resultMap>
+
+    <!--添加学生成绩-->
+    <insert id="addStuScore" parameterType="int">
+        INSERT INTO score(s_id,c_id,s_score) VALUES(#{sid},#{cid},#{score});
+    </insert>
+
+    <!--验证是否有该学生成绩-->
+    <select id="checkScore" parameterType="int" resultType="int">
+        SELECT COUNT(c_id) FROM score WHERE 1=1 <if test="sid !='0'.toString()">AND s_id=#{sid}</if><if test="cid !='0'.toString()">AND c_id=#{cid}</if>
+    </select>
+
+    <!--验证是否有该学生-->
+    <select id="queryStuById"  parameterType="int" resultType="int">
+        SELECT COUNT(s_id) FROM stu <if test="sid !='0'.toString()">WHERE s_id=#{sid}</if>;
+    </select>
+
+    <!--通过学号删除学生-->
+    <delete id="deleteStuById">
+        DELETE FROM score WHERE s_id=#{sid} AND c_id=(SELECT c_id FROM course WHERE c_name=#{cname});
+    </delete>
+
+    <!--修改学生成绩-->
+    <update id="updateStuScore">
+        UPDATE score SET s_score=#{score} WHERE c_id=(SELECT c_id FROM course WHERE c_name=#{cname}) AND s_id=#{sid};
+    </update>
+
+</mapper>
